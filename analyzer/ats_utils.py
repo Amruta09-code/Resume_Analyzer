@@ -1,5 +1,6 @@
 import fitz  # PyMuPDF
 import re
+import os
 
 
 def extract_text_from_pdf(file_path):
@@ -7,12 +8,17 @@ def extract_text_from_pdf(file_path):
     with fitz.open(file_path) as doc:
         for page in doc:
             text += page.get_text()
+    # remove multiple spaces
+    text = re.sub(r'\s+', ' ', text)
     return text
 
 def calculate_ats_score(text, keywords):
     score = 0
     matched = []
     for keyword in keywords:
+        # prevent ReDOS
+        keyword = re.escape(keyword)
+
         if re.search(rf'\b{keyword}\b', text, re.IGNORECASE):
             score += 10
             matched.append(keyword)

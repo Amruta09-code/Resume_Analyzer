@@ -198,9 +198,10 @@
             height: 70px;
             box-shadow: 0 4px 15px rgba(26, 115, 232, 0.12);
             position: sticky;
-            top: 0;
+            top: 15px;
             z-index: 100;
             border-bottom: 2px solid #e0e8ff;
+            border-radius: 15px;
         }
         .search-bar {
             display: flex;
@@ -788,9 +789,9 @@
                 <i class="fas fa-chart-simple"></i>
                 <span>Dashboard</span>
             </div>
-            <div class="menu-item">
+            <a href="{% url 'upload_resume' %}" class="menu-item">
                 <i class="fas fa-file-alt"></i>
-                <span>Resume</span>
+                <span>Upload Resume</span>
             </div>
             <div class="menu-item">
                 <i class="fas fa-layer-group"></i>
@@ -799,10 +800,10 @@
         </div>
         
         <div class="sidebar-bottom">
-            <div class="sidebar-action">
+            {% comment %} <div class="sidebar-action">
                 <i class="fas fa-bell"></i>
                 <span>Notifications</span>
-            </div>
+            </div> {% endcomment %}
             <a href="{% url 'profile' %}" class="sidebar-action">
                 <i class="fas fa-user-circle"></i>
                 <span>Profile</span>
@@ -816,32 +817,32 @@
         
         <div class="container">
             <header>
-                <h1>Welcome back,{{username}}!</h1>
+                <h1>Welcome back, {{ username }}!</h1>
                 <p class="subtitle">Here's what's happening with your career development. Track your progress, analyze your job search, and optimize your career strategy.</p>
             </header>
             
             <div class="metrics-grid">
                 <div class="metric-card">
                     <div class="metric-title"><i class="fas fa-chart-line"></i> ATS Score</div>
-                    <div class="metric-value">85%</div>
+                    <div class="metric-value">{% if latest_resume %}{{ latest_resume.ats_score }}%{% else %}N/A{% endif %}</div>
                     <div class="metric-change">+12% Last resume scan</div>
                 </div>
                 
                 <div class="metric-card">
                     <div class="metric-title"><i class="fas fa-file"></i> Resumes</div>
-                    <div class="metric-value">3</div>
+                    <div class="metric-value">{{ resume_count }}</div>
                     <div class="metric-change">+1 Total uploaded</div>
                 </div>
                 
                 <div class="metric-card">
                     <div class="metric-title"><i class="fas fa-comments"></i> Interview Questions</div>
-                    <div class="metric-value">24</div>
+                    <div class="metric-value">TBD</div>
                     <div class="metric-change">+8 Generated this week</div>
                 </div>
                 
                 <div class="metric-card">
                     <div class="metric-title"><i class="fas fa-star"></i> Skill Score</div>
-                    <div class="metric-value">7.8/10</div>
+                     <div class="metric-value">{% if skill_score is not None %}{{ skill_score }}{% else %}N/A{% endif %}</div>
                     <div class="metric-change">+0.5 Based on GitHub</div>
                 </div>
             </div>  
@@ -926,9 +927,9 @@
                             </li>
                         </ul>
                          <div style="text-align: center; margin-top: 20px;">
-                           <a href="{% url 'profile' %}" class="inline-block bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded hover:bg-blue-700 transition">
+                            <a href="{% url 'profile' %}" class="inline-block bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded hover:bg-blue-700 transition">
                             View Your Profile
-                           </a>
+                            </a>
                          </div>
                     </div>
                     

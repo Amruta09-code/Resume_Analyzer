@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django import forms
 from django.views.decorators.csrf import csrf_exempt
@@ -12,6 +12,10 @@ from .models import Resume, Profile
 import json
 from analyzer.utils.gemini import generate_interview_questions
 from django.contrib.auth.models import User  # ✅ make sure you import this
+from .ats_utils import extract_text_from_pdf
+from analyzer.utils.resume_analysis import analyze_resume_score
+import os
+
 
 def landing_page(request):
     return render(request, 'landingpage.html')
@@ -57,28 +61,58 @@ def signup_view(request):
 # 🏠 Dashboard
 @login_required
 def dashboard(request):
-    resumes = Resume.objects.filter(user=request.user)
-    username = request.user.username  # Get the logged in user's username
+    resumes = Resume.objects.filter(user=request.user).order_by('-uploaded_at')
+    resume_count = resumes.count()
+
+    latest_resume = resumes.first() if resumes.exists() else None
+    skill_score = latest_resume.ats_score if latest_resume else None  # Default skill score if no resume exists
+    username = request.user.first_name
     return render(request, 'dashboard.html', {
         'resumes': resumes,
-        'username': username
+        'resume_count': resume_count,
+        'latest_resume': latest_resume,
+        'skill_score': skill_score,  # Pass the skill score to the template
     })
+
+
 
 # 📁 Upload Resume
 @login_required
 def upload_resume(request):
+    resumes = Resume.objects.filter(user=request.user).order_by('-uploaded_at')
     if request.method == 'POST':
         form = ResumeForm(request.POST, request.FILES)
         if form.is_valid():
             resume = form.save(commit=False)
             resume.user = request.user
-            resume.ats_score = 75.0  # You can replace with real logic
-            resume.domain = "Web Development"  # Replace with logic
+            resume.ats_score = analyze_resume_score(resume.file)  # get ats score
+           
             resume.save()
-            return redirect('dashboard')
+            ats_score = resume.ats_score
+            messages.success(request, 'Resume uploaded and analyzed successfully!')
+            resumes = Resume.objects.filter(user=request.user).order_by('-uploaded_at') # Re-query to get the latest list
+            return render(request, 'upload_resume.html', {'form': form, 'ats_score': ats_score, 'resumes': resumes})
     else:
         form = ResumeForm()
-    return render(request, 'upload_resume.html', {'form': form})
+        ats_score = None  # Ensure ats_score is defined even when the form is not submitted
+
+    return render(request, 'upload_resume.html', {'form': form, 'ats_score': ats_score, 'resumes': resumes})
+
+@login_required
+def delete_resume(request, resume_id):
+    # Use get_object_or_404 to safely retrieve the resume or return a 404 error
+    resume = get_object_or_404(Resume, id=resume_id)
+
+    # Security check: ensure the user deleting the resume is the one who uploaded it
+    if resume.user != request.user:
+        messages.error(request, "You are not authorized to delete this resume.")
+        return redirect('upload_resume')
+
+    resume.file.delete(save=False)  # Delete the actual file from storage
+    resume.delete()  # Delete the resume record from the database
+
+    messages.success(request, "Resume deleted successfully.")
+    return redirect('upload_resume')
 
 # 👤 Profile
 @login_required

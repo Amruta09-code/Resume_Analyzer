@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
-
+from .views import upload_resume
 
 urlpatterns = [
     # path('', RedirectView.as_view(url='login/', permanent=False)), 
@@ -14,6 +14,7 @@ urlpatterns = [
     path('signup/', views.signup_view, name='signup'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('upload-resume/', views.upload_resume, name='upload_resume'),
+    path('resumes/<int:resume_id>/delete/', views.delete_resume, name='delete_resume'),
     path('profile/', views.profile, name='profile'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
     path('interview-prep/', views.interview_prep, name='interview_prep'),

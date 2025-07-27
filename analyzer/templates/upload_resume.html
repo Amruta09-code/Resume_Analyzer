@@ -87,7 +87,26 @@
             box-shadow: none;
             background: transparent;
         }
-        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: #f5f9ff;
+            padding: 7px 12px;
+            border-radius: 50px;
+            width: 220px;
+        }
+        .search-bar input {
+            border: none;
+            background: transparent;
+            padding: 0 8px;
+            font-size: 14px;
+            width: 100%;
+            outline: none;
+        }
+        .search-bar i {
+            color: #5f6368;
+            font-size: 14px;
+        }
         /* Main Container */
         .container {
             width: 100%;
@@ -161,10 +180,15 @@
             border-color: #4361ee;
             background: #f0f5ff;
         }
+
+        .upload-area.highlight {
+            border-color: #4361ee;
+            background: #f0f5ff;
+        }
         
         .upload-text {
             font-size: 20px;
-            color: #2c3e50;
+            color: #4a5568;
             margin-bottom: 12px;
             font-weight: 600;
         }
@@ -458,129 +482,127 @@
     
     <!-- Main Content Container -->
     <div class="container">
+        <form method="post" enctype="multipart/form-data" class="upload-section">
+            {% csrf_token %}
         <!-- Upload Section -->
-        <div class="upload-section">
-            <h2 class="section-title">
-                <i class="fas fa-cloud-upload-alt"></i>
-                Resume Upload & Analysis
-            </h2>
-            <p>Upload your resume to get ATS compatibility scores and improvement suggestions</p>
+                <h2 class="section-title">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    {% if ats_score %}
+                    <div style="margin-top: 20px; font-size: 1.2em; color: green;">
+                    ATS Score: {{ ats_score }}
+                    </div>
+                     {% else %}
+                     
+
+
+                    Resume Upload & Analysis
+                </h2>
+                <p>Upload your resume to get ATS compatibility scores and improvement suggestions</p>
             
-            <div style="display: flex; align-items: center; gap: 15px; margin: 20px 0;">
-                <div style="width: 36px; height: 36px; background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%); border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px;">
-                    1
+                <div style="display: flex; align-items: center; gap: 15px; margin: 20px 0;">
+                    <div style="width: 36px; height: 36px; background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%); border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px;">
+                        1
+                    </div>
+                    <h3 style="font-size: 20px; font-weight: 600;">Upload Resume</h3>
+                      {% endif %}
                 </div>
-                <h3 style="font-size: 20px; font-weight: 600;">Upload Resume</h3>
-            </div>
             
-            <div class="formats">
-                <i class="fas fa-info-circle"></i> Supported formats: PDF, DOCX, TXT (Max 5MB)
-            </div>
+                <div class="formats">
+                    <i class="fas fa-info-circle"></i> Supported formats: PDF, DOCX, TXT (Max 5MB)
+                </div>
             
-            <div class="divider"></div>
+                <div class="divider"></div>
             
-            <div class="upload-area" id="dropZone">
-                <i class="fas fa-cloud-upload-alt" style="font-size: 42px; color: #4361ee; margin-bottom: 15px;"></i>
-                <div class="upload-text">Drag and drop your file here, or click to browse</div>
-                <button class="browse-btn">Choose File</button>
-                <input type="file" class="file-input" id="fileInput" accept=".pdf,.docx,.txt">
-            </div>
-        </div>
+                <div class="upload-area" id="dropZone">
+                    <i class="fas fa-cloud-upload-alt" style="font-size: 42px; color: #4361ee; margin-bottom: 15px;"></i>
+                    <div class="upload-text">Drag and drop your file here</div>
+                    <button type="button" class="browse-btn">Choose File</button>
+                    {{ form.file }}
+                </div>
+        </form>
         
         <!-- Your Resumes Section Below Upload Section -->
         <div class="resumes-section">
-            <h2 class="section-title">
-                <i class="fas fa-folder-open"></i>
-                Your Resumes
-            </h2>
+                <h2 class="section-title">
+                    <i class="fas fa-folder-open"></i>
+                    Your Resumes
+                </h2>
             
-            <div class="resume-grid">
-                <div class="resume-card">
-                    <div class="resume-header">
-                        <div class="file-icon">
-                            <i class="fas fa-file-pdf"></i>
-                        </div>
-                        <div class="resume-info">
-                            <div class="resume-name">Senior_Developer_Resume.pdf</div>
-                            <div class="resume-details">
-                                <span>256 KB</span>
-                                <span>•</span>
-                                <span>2 hours ago</span>
+                <div class="resume-grid">
+                    {% if resumes %}
+                        {% for resume in resumes %}
+                        <div class="resume-card">
+                            <div class="resume-header">
+                                <div class="file-icon">
+                                    {% if 'pdf' in resume.file.name|lower %}
+                                        <i class="fas fa-file-pdf"></i>
+                                    {% elif 'doc' in resume.file.name|lower %}
+                                        <i class="fas fa-file-word"></i>
+                                    {% else %}
+                                        <i class="fas fa-file-alt"></i>
+                                    {% endif %}
+                                </div>
+                                <div class="resume-info">
+                                    <div class="resume-name">{{ resume.file.name|cut:"resumes/" }}</div>
+                                    <div class="resume-details">
+                                        <span>{{ resume.file.size|filesizeformat }}</span>
+                                        <span>•</span>
+                                        <span>{{ resume.uploaded_at|timesince }} ago</span>
+                                    </div>
+                                </div>
+                                <div class="file-actions">
+                                    <a href="{{ resume.file.url }}" target="_blank" class="file-action-btn" title="View">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{% url 'delete_resume' resume.id %}" class="file-action-btn" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                    <a href="{{ resume.file.url }}" download class="file-action-btn" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="file-actions">
-                            <div class="file-action-btn" title="View">
-                                <i class="fas fa-eye"></i>
-                            </div>
-                            <div class="file-action-btn" title="Delete">
-                                <i class="fas fa-trash"></i>
-                            </div>
-                            <div class="file-action-btn" title="Download">
-                                <i class="fas fa-download"></i>
-                            </div>
-                        </div>
-                    </div>
                     
-                    <div class="divider"></div>
-                    
-                    <div class="suggestions">
-                        <h3 class="suggestions-title">
-                            <i class="fas fa-lightbulb"></i>
-                            Improvement Suggestions
-                        </h3>
-                        <ul class="suggestions-list">
-                            <li>Add more quantifiable achievements to demonstrate impact</li>
-                            <li>Include relevant keywords for target role (e.g., "JavaScript", "React", "Node.js")</li>
-                            <li>Optimize formatting for ATS parsing by using standard section headings</li>
-                            <li>Add a professional summary at the top of your resume</li>
-                            <li>Include industry-specific certifications if applicable</li>
-                        </ul>
-                    </div>
+                            <div class="divider"></div>
+                        
+                            <div class="suggestions">
+                                <h3 class="suggestions-title">
+                                    <i class="fas fa-lightbulb"></i>
+                                    Improvement Suggestions (ATS Score: {{ resume.ats_score }}%)
+                                </h3>
+                                <ul class="suggestions-list">
+                                    {% if resume.ats_score < 50 %}
+                                        <li>Your resume needs significant keyword optimization. Research target job descriptions and add relevant skills.</li>
+                                        <li>Ensure standard formatting (e.g., "Work Experience", "Education") for better ATS parsing.</li>
+                                        <li>Consider adding a professional summary to highlight your key qualifications at the top.</li>
+                                    {% elif resume.ats_score < 75 %}
+                                        <li>Great start! To improve, try to add more quantifiable achievements (e.g., "Increased sales by 15%").</li>
+                                        <li>Ensure your resume formatting is clean and easy for an ATS to parse. Avoid tables and columns.</li>
+                                        <li>Review job descriptions for common action verbs (e.g., "managed", "developed", "led") and incorporate them.</li>
+                                    {% elif resume.ats_score < 90 %}
+                                        <li>Your resume is strong. To make it even better, tailor it for each specific job by mirroring keywords from the job description.</li>
+                                        <li>Check for consistent formatting in dates and job titles.</li>
+                                    {% else %}
+                                        <li>Excellent score! Your resume is well-optimized.</li>
+                                        <li>A final proofread for minor typos or grammatical errors is always a good idea.</li>
+                                    {% endif %}
+                                    <li>Always tailor your resume for each specific job application for the best results.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div style="text-align: center; padding: 40px; background: #f8fafc; border-radius: 12px;">
+                            <i class="fas fa-folder-plus" style="font-size: 48px; color: #cbd5e0; margin-bottom: 20px;"></i>
+                            <h3 style="font-size: 22px; font-weight: 600; color: #4a5568;">No Resumes Found</h3>
+                            <p style="color: #718096; margin-top: 8px;">
+                                It looks like you haven't uploaded any resumes yet.
+                                <br>
+                                Use the uploader above to get your first analysis!
+                            </p>
+                        </div>
+                    {% endif %}
                 </div>
-                
-                <div class="resume-card">
-                    <div class="resume-header">
-                        <div class="file-icon">
-                            <i class="fas fa-file-word"></i>
-                        </div>
-                        <div class="resume-info">
-                            <div class="resume-name">UX_Designer_Resume.docx</div>
-                            <div class="resume-details">
-                                <span>198 KB</span>
-                                <span>•</span>
-                                <span>1 day ago</span>
-                            </div>
-                        </div>
-                        <div class="file-actions">
-                            <div class="file-action-btn" title="View">
-                                <i class="fas fa-eye"></i>
-                            </div>
-                            <div class="file-action-btn" title="Delete">
-                                <i class="fas fa-trash"></i>
-                            </div>
-                            <div class="file-action-btn" title="Download">
-                                <i class="fas fa-download"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="divider"></div>
-                    
-                    <div class="suggestions">
-                        <h3 class="suggestions-title">
-                            <i class="fas fa-lightbulb"></i>
-                            Improvement Suggestions
-                        </h3>
-                        <ul class="suggestions-list">
-                            <li>Add portfolio link to showcase design projects</li>
-                            <li>Include more metrics to demonstrate design impact</li>
-                            <li>Add specific design tools proficiency (Figma, Sketch, Adobe XD)</li>
-                            <li>Highlight user research methodologies you're experienced with</li>
-                            <li>Showcase any design awards or recognitions</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
     
@@ -590,116 +612,88 @@
     
     <script>
         // File upload functionality
-        const dropZone = document.getElementById('dropZone');
-        const fileInput = document.getElementById('fileInput');
-        const browseBtn = document.querySelector('.browse-btn');
-        
-        // Open file dialog when clicking the upload area or button
-        dropZone.addEventListener('click', () => {
-            fileInput.click();
-        });
-        
-        browseBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            fileInput.click();
-        });
-        
-        // Handle drag and drop
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, preventDefaults, false);
-        });
-        
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-        
-        ['dragenter', 'dragover'].forEach(eventName => {
-            dropZone.addEventListener(eventName, highlight, false);
-        });
-        
-        ['dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, unhighlight, false);
-        });
-        
-        function highlight() {
-            dropZone.style.borderColor = '#4361ee';
-            dropZone.style.background = '#e6f0ff';
-        }
-        
-        function unhighlight() {
-            dropZone.style.borderColor = '#cbd5e0';
-            dropZone.style.background = '#f8fafc';
-        }
-        
-        // Handle file drop
-        dropZone.addEventListener('drop', handleDrop, false);
-        
-        function handleDrop(e) {
-            const dt = e.dataTransfer;
-            const files = dt.files;
-            handleFiles(files);
-        }
-        
-        // Handle file selection
-        fileInput.addEventListener('change', () => {
-            handleFiles(fileInput.files);
-        });
-        
-        function handleFiles(files) {
-            if (files.length > 0) {
-                const file = files[0];
-                const fileName = file.name;
-                const fileSize = formatFileSize(file.size);
-                
-                // Update UI with file info
-                dropZone.innerHTML = `
-                    <i class="fas fa-file-alt" style="font-size: 42px; color: #10b981; margin-bottom: 12px;"></i>
-                    <div class="upload-text">${fileName}</div>
-                    <div style="color: #718096; margin-bottom: 15px;">${fileSize}</div>
-                    <button class="browse-btn" style="background:linear-gradient(90deg, #10b981 0%, #059669 100%);">
-                        Analyze Resume
-                    </button>
-                `;
-                
-                // Add new event listener for the analyze button
-                const newBtn = dropZone.querySelector('.browse-btn');
-                newBtn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    alert(`Analyzing: ${fileName}\nRedirecting to results page...`);
-                    // In a real application, you would submit the file to a server here
-                });
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadForm = document.querySelector('form.upload-section');
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.querySelector('.upload-section input[type="file"]');
+            const browseBtn = document.querySelector('.browse-btn');
+
+            if (!uploadForm || !dropZone || !fileInput || !browseBtn) {
+                console.error('Upload elements not found!');
+                return;
             }
-        }
-        
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-        
-        // Add functionality to file action buttons
-        document.querySelectorAll('.file-action-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const action = this.querySelector('i').className;
-                const fileName = this.closest('.resume-card').querySelector('.resume-name').textContent;
-                
-                if (action.includes('eye')) {
-                    alert(`Viewing: ${fileName}`);
-                } else if (action.includes('trash')) {
-                    if (confirm(`Are you sure you want to delete ${fileName}?`)) {
-                        this.closest('.resume-card').style.opacity = '0';
-                        setTimeout(() => {
-                            this.closest('.resume-card').remove();
-                        }, 300);
-                    }
-                } else if (action.includes('download')) {
-                    alert(`Downloading: ${fileName}`);
+
+            // Hide the default file input, we'll use our custom button
+            fileInput.style.display = 'none';
+
+            // When the drop zone (but not the button) is clicked, trigger the file input
+            dropZone.addEventListener('click', () => fileInput.click());
+
+            // When the custom "Choose File" button is clicked, trigger the file input
+            // and stop the event from bubbling up to the dropZone to prevent double-firing.
+            browseBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                fileInput.click();
+            });
+
+            // Handle drag and drop
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, () => dropZone.classList.add('highlight'), false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, () => dropZone.classList.remove('highlight'), false);
+            });
+
+            // Handle file drop
+            dropZone.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files);
+            }
+
+            // Handle file selection from browse
+            fileInput.addEventListener('change', () => {
+                handleFiles(fileInput.files);
+            });
+
+            function handleFiles(files) {
+                if (files.length > 0) {
+                    // This is the crucial part: we must assign the selected/dropped files
+                    // to the file input element's `files` property for the form to submit them.
+                    fileInput.files = files;
+
+                    // Now that the file input has the file, we can submit the form.
+                    uploadForm.submit();
                 }
+            }
+        });
+
+        // Add functionality to file action buttons
+        document.querySelectorAll('.file-action-btn[title="Delete"]').forEach(btn => {
+            btn.addEventListener('click', function(event) {
+                const fileName = this.closest('.resume-card').querySelector('.resume-name').textContent;
+                // The confirm dialog will pause execution. If the user clicks "Cancel", it returns false.
+                if (!confirm(`Are you sure you want to delete "${fileName.trim()}"?`)) {
+                    // If they cancel, we prevent the browser from following the link.
+                    event.preventDefault();
+                }
+                // If they click "OK", the script does nothing, and the browser proceeds with the default
+                // action of navigating to the href link, which triggers the delete view.
             });
         });
     </script>
+
 </body>
 </html>

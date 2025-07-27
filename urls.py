@@ -7,6 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # This single line correctly includes all URLs from your analyzer app
     path('', include('analyzer.urls')),
+    
 ]
 
 if settings.DEBUG:

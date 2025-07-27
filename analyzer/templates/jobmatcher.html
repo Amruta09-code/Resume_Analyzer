@@ -543,208 +543,109 @@
             <div class="search-row">
                 <div class="search-input">
                     <label>Job title or company</label>
-                    <input type="text" placeholder="e.g. Frontend Developer">
-                </div>
+                    <select id="job-title">
+                        <option value="Backend Developer">Backend Developer</option>  
+                        <option value="Full Stack Developer">Full Stack Developer</option>
+                        <option value="Data Scientist">Data Scientist</option> 
+                        <option value="UI/UX Designer">UI/UX Designer</option>    
+                        <option value="UX Researcher">UX Researcher</option>    
+                        <option value="Frontend Developer">Frontend Developer</option>
+                    </select>         
+                    </div>
                 
                 <div class="search-input">
                     <label>Domain</label>
-                    <select>
-                        <option>All Domains</option>
-                        <option>Technology</option>
-                        <option>Finance</option>
-                        <option>Healthcare</option>
-                        <option>Education</option>
+                    <select id="domain">
+                        <option value="Web Development">Web Development</option>
+                        <option value="Data Science">Data Science</option>
+                        <option value="UI/UX Design">UI/UX Design</option>
+                        <option value="DevOps">DevOps</option>
+                        <option value="All Domains">All Domains</option>
                     </select>
                 </div>
                 
                 <div class="search-input">
                     <label>Location</label>
-                    <select>
-                        <option>All States</option>
-                        <option>California</option>
-                        <option>New York</option>
-                        <option>Texas</option>
-                        <option>Florida</option>
+                    <select id="location">
+                        <option value="Mumbai">Mumbai</option>
+                        <option value="Pune">Pune</option>
+                        <option value="Banglore">Banglore</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="All Locations">All Locations</option>
                     </select>
+                        <div class="search-input" style="display: flex; align-items: flex-end; justify-content: flex-end; margin-top: 10px;">
+                       <button id="search-btn" style="background: #4361ee; color: #fff; border: none; padding: 12px 18px; border-radius: 8px; font-size: 18px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                        <i class="fas fa-search"></i>
+                       </button>
+                    </div>
+                    
                 </div>
             </div>
-            
-            <div class="save-search">
-                <button><i class="far fa-star"></i> Save Search</button>
-            </div>
+                      
+
+                  
+             
         </section>
         
         <!-- Job Listings -->
-        <section class="job-listings">
-            <h3>
-                <i class="fas fa-briefcase"></i> Job Opportunities 
-                <span class="job-count">6</span>
-            </h3>
-            
-            <!-- Job Card 1 -->
-            <div class="job-card">
-                <div class="job-info">
-                    <div class="job-title">
-                        Senior Frontend Developer
-                        <span class="match-badge"><i class="fas fa-check"></i> Match</span>
-                    </div>
-                    <div class="company">TechCorp Inc.</div>
-                    
-                    <div class="job-details">
-                        <div class="detail-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>San Francisco, CA</span>
-                        </div>
-                        
-                        <div class="detail-item">
-                            <i class="fas fa-dollar-sign"></i>
-                            <span>$120k - $150k</span>
-                        </div>
-                        
-                        <div class="detail-item">
-                            <i class="fas fa-clock"></i>
-                            <span>Full-time</span>
-                        </div>
-                        
-                        <div class="detail-item">
-                            <i class="far fa-calendar-alt"></i>
-                            <span>2 days ago</span>
-                        </div>
-                    </div>
-                    
-                    <div class="job-tags">
-                        <div class="tag">React</div>
-                        <div class="tag">TypeScript</div>
-                        <div class="tag">Next.js</div>
-                        <div class="tag">Tailwind CSS</div>
-                    </div>
-                </div>
-                
-                <!-- Right-aligned buttons -->
-                <div class="job-actions">
-                    <button class="apply-btn"><i class="fas fa-external-link-alt"></i> Apply Now</button>
-                    <button class="save-btn"><i class="far fa-bookmark"></i> Save Job</button>
-                </div>
+        <section id="job-results" class="job-listings" style="display:none; margin-top: 20px;">
+    <h3><i class="fas fa-briefcase"></i> Job Opportunities <span class="job-count" id="job-count">1</span></h3>
+    <div class="job-card">
+        <div class="job-info">
+            <div class="job-title" id="result-title">Job Title</div>
+            <div class="company" id="result-company">Company Name</div>
+            <div class="job-details">
+                <div class="detail-item"><i class="fas fa-map-marker-alt"></i> <span id="result-location">Location</span></div>
+                <div class="detail-item"><i class="fas fa-clock"></i> Full-time</div>
             </div>
-            
-            <!-- Job Card 2 -->
-            <div class="job-card">
-                <div class="job-info">
-                    <div class="job-title">
-                        Full Stack Engineer
-                    </div>
-                    <div class="company">StartupXYZ</div>
-                    
-                    <div class="job-details">
-                        <div class="detail-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Remote</span>
-                        </div>
-                        
-                        <div class="detail-item">
-                            <i class="fas fa-dollar-sign"></i>
-                            <span>$100k - $130k</span>
-                        </div>
-                        
-                        <div class="detail-item">
-                            <i class="fas fa-clock"></i>
-                            <span>Full-time</span>
-                        </div>
-                        
-                        <div class="detail-item">
-                            <i class="far fa-calendar-alt"></i>
-                            <span>5 days ago</span>
-                        </div>
-                    </div>
-                    
-                    <div class="job-tags">
-                        <div class="tag">Node.js</div>
-                        <div class="tag">Express</div>
-                        <div class="tag">MongoDB</div>
-                        <div class="tag">React</div>
-                    </div>
-                </div>
-                
-                <!-- Right-aligned buttons -->
-                <div class="job-actions">
-                    <button class="apply-btn"><i class="fas fa-external-link-alt"></i> Apply Now</button>
-                    <button class="save-btn"><i class="far fa-bookmark"></i> Save Job</button>
-                </div>
-            </div>
-            
-            <!-- Job Card 3 -->
-            <div class="job-card">
-                <div class="job-info">
-                    <div class="job-title">
-                        UI/UX Designer
-                    </div>
-                    <div class="company">DesignHub</div>
-                    
-                    <div class="job-details">
-                        <div class="detail-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>New York, NY</span>
-                        </div>
-                        
-                        <div class="detail-item">
-                            <i class="fas fa-dollar-sign"></i>
-                            <span>$90k - $110k</span>
-                        </div>
-                        
-                        <div class="detail-item">
-                            <i class="fas fa-clock"></i>
-                            <span>Contract</span>
-                        </div>
-                        
-                        <div class="detail-item">
-                            <i class="far fa-calendar-alt"></i>
-                            <span>1 week ago</span>
-                        </div>
-                    </div>
-                    
-                    <div class="job-tags">
-                        <div class="tag">Figma</div>
-                        <div class="tag">Adobe XD</div>
-                        <div class="tag">UI Design</div>
-                        <div class="tag">User Research</div>
-                    </div>
-                </div>
-                
-                <!-- Right-aligned buttons -->
-                <div class="job-actions">
-                    <button class="apply-btn"><i class="fas fa-external-link-alt"></i> Apply Now</button>
-                    <button class="save-btn"><i class="far fa-bookmark"></i> Save Job</button>
-                </div>
-            </div>
-        </section>
+            <p id="result-description">Job description will appear here after you search.</p>
+        </div>
+        <div class="job-actions">
+            <a href="#" target="_blank" id="apply-link">
+                <button class="apply-btn"><i class="fas fa-external-link-alt"></i> Apply Now</button>
+            </a>
+        </div>
     </div>
+</section>
 
-    <script>
-        // Save Job functionality
-        document.querySelectorAll('.save-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const icon = this.querySelector('i');
-                if (icon.classList.contains('far')) {
-                    icon.classList.replace('far', 'fas');
-                    this.style.backgroundColor = '#f0f5ff';
-                    this.style.borderColor = 'var(--primary)';
-                    this.style.color = 'var(--primary)';
-                } else {
-                    icon.classList.replace('fas', 'far');
-                    this.style.backgroundColor = '';
-                    this.style.borderColor = '';
-                    this.style.color = '';
-                }
-            });
-        });
-        
-        // Apply button functionality
-        document.querySelectorAll('.apply-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const jobTitle = this.closest('.job-card').querySelector('.job-title').textContent;
-                alert(`Applying for: ${jobTitle}`);
-            });
-        });
-    </script>
+    </div>
+ 
+    
+
+  
 </body>
+<script>
+    const descriptions = {
+        "Frontend Developer": "Build responsive interfaces using React, HTML, CSS, and JavaScript.",
+        "Backend Developer": "Develop APIs and server-side logic using Python, Node.js or Django.",
+        "Full Stack Developer": "Combine front-end and back-end technologies to build complete solutions.",
+        "Data Scientist": "Analyze data, build ML models, and visualize insights.",
+        "UI/UX Designer": "Design user-friendly interfaces and enhance user experience using tools like Figma.",
+        "UX Researcher": "Conduct user research, interviews, and usability testing to inform design."
+    };
+
+    document.getElementById('search-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+
+        const title = document.getElementById('job-title').value;
+        const domain = document.getElementById('domain').value;
+        const location = document.getElementById('location').value;
+
+        const description = descriptions[title] || "No description available.";
+
+        // Populate job card
+        document.getElementById('result-title').textContent = title;
+        document.getElementById('result-company').textContent = "UserFirst Design";
+        document.getElementById('result-location').textContent = location;
+        document.getElementById('result-description').textContent = description;
+
+        // Generate LinkedIn search link
+        const linkedinURL = `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(title)}${location !== 'All Locations' ? `&location=${encodeURIComponent(location)}` : ''}`;
+
+        document.getElementById('apply-link').href = linkedinURL;
+
+        // Show job result section
+        document.getElementById('job-results').style.display = 'block';
+    });
+</script>
 </html>
