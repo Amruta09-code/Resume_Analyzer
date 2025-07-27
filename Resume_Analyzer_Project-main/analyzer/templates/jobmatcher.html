@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerMet - Job Matcher</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Navigation Bar Styles (Unified) */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            padding: 0 25px;
+            height: 70px;
+            box-shadow: 0 4px 15px rgba(26, 115, 232, 0.12);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid #e0e8ff;
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: #f5f9ff;
+            padding: 7px 12px;
+            border-radius: 50px;
+            width: 220px;
+        }
+        .search-bar input {
+            border: none;
+            background: transparent;
+            padding: 0 8px;
+            font-size: 14px;
+            width: 100%;
+            outline: none;
+        }
+        .search-bar i {
+            color: #5f6368;
+            font-size: 14px;
+        }
+        .top-nav-links {
+            display: flex;
+            gap: 8px;
+            background: #fff;
+            padding: 3px 8px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            align-items: center;
+        }
+        .top-nav-links a {
+            text-decoration: none;
+            color: #5f6368;
+            font-weight: 600;
+            padding: 8px 18px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+        }
+        .top-nav-links a i {
+            font-size: 16px;
+            transition: color 0.2s;
+        }
+        .top-nav-links a:hover {
+            background: #f0f5ff;
+            color: #4361ee;
+            transform: translateY(-2px);
+        }
+        .top-nav-links a:hover i {
+            color: #4361ee;
+        }
+        .top-nav-links a.active {
+            background: linear-gradient(135deg, #4361ee, #153df3);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.25);
+        }
+        .top-nav-links a.active i {
+            color: #fff;
+        }
+        @media (max-width: 1024px) {
+            .navbar {
+                padding: 0 12px;
+            }
+            .top-nav-links a {
+                padding: 7px 10px;
+                font-size: 12px;
+            }
+            .search-bar {
+                width: 160px;
+            }
+        }
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                height: auto;
+                padding: 10px;
+                gap: 10px;
+            }
+            .search-bar {
+                width: 100%;
+                max-width: 350px;
+            }
+            .top-nav-links {
+                width: 100%;
+                overflow-x: auto;
+                padding: 8px 2px;
+                justify-content: flex-start;
+            }
+        }
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 0 2px;
+            }
+            .top-nav-links a {
+                padding: 6px 6px;
+                font-size: 11px;
+            }
+            .search-bar {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #06d6a0;
+            --warning: #ffd166;
+            --bg: #f5f9ff;
+            --card: #ffffff;
+            --text: #1a202c;
+            --gray: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            padding: 20px;
+            background-image: radial-gradient(circle at 1% 1%, rgba(67, 97, 238, 0.05) 0%, transparent 90%);
+        }
+
+        /* NAVBAR */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 15px 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            max-width: 1200px;
+            margin: 0 auto 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            margin-right: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover i {
+            transform: rotate(15deg);
+        }
+
+        .careermet-logo {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 600;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        /* MAIN CONTAINER */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        .container header {
+            text-align: left;
+            margin-top: 10px;
+            padding-left: 10px;
+            margin-bottom: 30px;
+        }
+
+        .container header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .container header p {
+            font-size: 15px;
+            color: var(--gray);
+        }
+
+        /* SEARCH & FILTER SECTION */
+        .search-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        .search-section h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .search-input label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .search-input input,
+        .search-input select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 15px;
+        }
+
+        .save-search {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        .save-search button {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .save-search button:hover {
+            background-color: var(--bg);
+        }
+
+        /* JOB LISTINGS */
+        .job-listings {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        .job-listings h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .job-count {
+            background: var(--primary);
+            color: white;
+            font-size: 14px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-left: 5px;
+        }
+
+        .job-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .job-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-color: rgba(67, 97, 238, 0.3);
+        }
+
+        .job-info {
+            flex: 1;
+            padding-right: 20px;
+        }
+
+        .job-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .match-badge {
+            background: var(--success);
+            color: white;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .company {
+            font-size: 16px;
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+
+        .job-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .detail-item i {
+            color: var(--gray);
+            width: 16px;
+            text-align: center;
+        }
+
+        .job-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* RIGHT-ALIGNED BUTTONS */
+        .job-actions {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+            min-width: 180px;
+            gap: 12px;
+        }
+
+        .apply-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .apply-btn:hover {
+            background: var(--secondary);
+        }
+
+        .save-btn {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .save-btn:hover {
+            background: var(--bg);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .navbar {
+                flex-direction: column;
+                padding: 15px;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .search-row {
+                flex-direction: column;
+            }
+            
+            .search-input {
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .job-card {
+                flex-direction: column;
+            }
+            
+            .job-info {
+                padding-right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .job-actions {
+                flex-direction: row;
+                justify-content: flex-start;
+                min-width: auto;
+            }
+            
+            .apply-btn, .save-btn {
+                width: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .job-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .apply-btn, .save-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' with active_page='job_matcher' %}
+    
+    <!-- Main Content -->
+    <div class="container">
+        <header>
+            <h1>Job Matcher</h1>
+            <p>Find the perfect job opportunities based on your skills and preferences</p>
+        </header>
+        
+        <!-- Search & Filter Section -->
+        <section class="search-section">
+            <h2><i class="fas fa-filter"></i> Search & Filter</h2>
+            
+            <div class="search-row">
+                <div class="search-input">
+                    <label>Job title or company</label>
+                    <select id="job-title">
+                        <option value="Backend Developer">Backend Developer</option>  
+                        <option value="Full Stack Developer">Full Stack Developer</option>
+                        <option value="Data Scientist">Data Scientist</option> 
+                        <option value="UI/UX Designer">UI/UX Designer</option>    
+                        <option value="UX Researcher">UX Researcher</option>    
+                        <option value="Frontend Developer">Frontend Developer</option>
+                    </select>         
+                    </div>
+                
+                <div class="search-input">
+                    <label>Domain</label>
+                    <select id="domain">
+                        <option value="Web Development">Web Development</option>
+                        <option value="Data Science">Data Science</option>
+                        <option value="UI/UX Design">UI/UX Design</option>
+                        <option value="DevOps">DevOps</option>
+                        <option value="All Domains">All Domains</option>
+                    </select>
+                </div>
+                
+                <div class="search-input">
+                    <label>Location</label>
+                    <select id="location">
+                        <option value="Mumbai">Mumbai</option>
+                        <option value="Pune">Pune</option>
+                        <option value="Banglore">Banglore</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="All Locations">All Locations</option>
+                    </select>
+                        <div class="search-input" style="display: flex; align-items: flex-end; justify-content: flex-end; margin-top: 10px;">
+                       <button id="search-btn" style="background: #4361ee; color: #fff; border: none; padding: 12px 18px; border-radius: 8px; font-size: 18px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                        <i class="fas fa-search"></i>
+                       </button>
+                    </div>
+                    
+                </div>
+            </div>
+                      
+
+                  
+             
+        </section>
+        
+        <!-- Job Listings -->
+        <section id="job-results" class="job-listings" style="display:none; margin-top: 20px;">
+    <h3><i class="fas fa-briefcase"></i> Job Opportunities <span class="job-count" id="job-count">1</span></h3>
+    <div class="job-card">
+        <div class="job-info">
+            <div class="job-title" id="result-title">Job Title</div>
+            <div class="company" id="result-company">Company Name</div>
+            <div class="job-details">
+                <div class="detail-item"><i class="fas fa-map-marker-alt"></i> <span id="result-location">Location</span></div>
+                <div class="detail-item"><i class="fas fa-clock"></i> Full-time</div>
+            </div>
+            <p id="result-description">Job description will appear here after you search.</p>
+        </div>
+        <div class="job-actions">
+            <a href="#" target="_blank" id="apply-link">
+                <button class="apply-btn"><i class="fas fa-external-link-alt"></i> Apply Now</button>
+            </a>
+        </div>
+    </div>
+</section>
+
+    </div>
+ 
+    
+
+  
+</body>
+<script>
+    const descriptions = {
+        "Frontend Developer": "Build responsive interfaces using React, HTML, CSS, and JavaScript.",
+        "Backend Developer": "Develop APIs and server-side logic using Python, Node.js or Django.",
+        "Full Stack Developer": "Combine front-end and back-end technologies to build complete solutions.",
+        "Data Scientist": "Analyze data, build ML models, and visualize insights.",
+        "UI/UX Designer": "Design user-friendly interfaces and enhance user experience using tools like Figma.",
+        "UX Researcher": "Conduct user research, interviews, and usability testing to inform design."
+    };
+
+    document.getElementById('search-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+
+        const title = document.getElementById('job-title').value;
+        const domain = document.getElementById('domain').value;
+        const location = document.getElementById('location').value;
+
+        const description = descriptions[title] || "No description available.";
+
+        // Populate job card
+        document.getElementById('result-title').textContent = title;
+        document.getElementById('result-company').textContent = "UserFirst Design";
+        document.getElementById('result-location').textContent = location;
+        document.getElementById('result-description').textContent = description;
+
+        // Generate LinkedIn search link
+        const linkedinURL = `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(title)}${location !== 'All Locations' ? `&location=${encodeURIComponent(location)}` : ''}`;
+
+        document.getElementById('apply-link').href = linkedinURL;
+
+        // Show job result section
+        document.getElementById('job-results').style.display = 'block';
+    });
+</script>
+</html>

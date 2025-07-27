@@ -1,0 +1,13 @@
+<nav class="navbar">
+    <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search jobs, companies, or skills...">
+    </div>
+    <div class="top-nav-links">
+        <a href="{% url 'dashboard' %}" class="{% if active_page == 'dashboard' %}active{% endif %}"><i class="fas fa-chart-simple"></i> Dashboard</a>
+        <a href="{% url 'upload_resume' %}" class="{% if active_page == 'upload_resume' %}active{% endif %}"><i class="fas fa-arrow-up-from-bracket"></i>Upload Resumes</a>
+        <a href="{% url 'interview_prep' %}" class="{% if active_page == 'interview_prep' %}active{% endif %}"><i class="fas fa-user-group"></i>Interview Prep</a>
+        <a href="{% url 'job_matcher' %}" class="{% if active_page == 'job_matcher' %}active{% endif %}"><i class="fas fa-briefcase"></i>Job Match</a>
+        <a href="{% url 'profile' %}" class="{% if active_page == 'profile' %}active{% endif %}"><i class="fas fa-user-circle"></i> Profile</a>
+    </div>
+</nav>

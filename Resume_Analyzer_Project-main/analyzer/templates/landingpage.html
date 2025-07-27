@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareerMate - AI-Powered Career Platform</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #3a0ca3;
+      --primary-light: #4361ee;
+      --secondary: #f72585;
+      --accent: #4cc9f0;
+      --light: #f8f9fa;
+      --dark: #0f172a;
+      --gray: #64748b;
+      --success: #06d6a0;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e8f0ff 100%);
+      min-height: 100vh;
+      color: var(--dark);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* Navigation Bar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 16px 40px;
+      border-radius: 0 0 16px 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      margin: 0 auto 20px;
+      max-width: 1400px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .logo-text {
+      font-size: 26px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--gray);
+      font-weight: 600;
+      padding: 10px 16px;
+      transition: all 0.3s ease;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+      background: rgba(67, 97, 238, 0.05);
+    }
+
+    .nav-links a.active {
+      color: var(--primary);
+      background: rgba(67, 97, 238, 0.1);
+    }
+
+    .nav-links a.active::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 3px;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 12px 28px;
+      border-radius: 10px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: 0.3s ease;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right, var(--primary), var(--primary-light));
+      color: white;
+      box-shadow: 0 4px 15px rgba(74, 68, 109, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(7, 47, 223, 0.4);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(67, 97, 238, 0.05);
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(to right, var(--primary), var(--primary-light));
+      color: white;
+      padding: 80px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+      z-index: 0;
+    }
+
+    .hero-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-left {
+      flex: 1;
+      min-width: 300px;
+      padding: 20px;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .hero-left .tag {
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 8px 18px;
+      border-radius: 50px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 25px;
+      backdrop-filter: blur(5px);
+    }
+
+    .hero-left h1 {
+      font-size: 48px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    .hero-left p {
+      font-size: 18px;
+      margin-bottom: 30px;
+      line-height: 1.7;
+      max-width: 600px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 30px;
+      margin-top: 20px;
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .hero-stats span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero-right {
+      flex: 1;
+      min-width: 300px;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      animation: fadeIn 1s ease-out;
+    }
+
+    .score-box {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 35px;
+      color: white;
+      width: 100%;
+      max-width: 350px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .score-box::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+      z-index: -1;
+    }
+
+    .score-box h2 {
+      font-size: 22px;
+      margin-bottom: 15px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .score-bar {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      height: 12px;
+      overflow: hidden;
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    .score-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--success), #06d6a0);
+      width: 0;
+      animation: fillBar 1.5s ease-out forwards;
+    }
+
+    .score-box p {
+      margin: 12px 0;
+      font-size: 17px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .score-box strong {
+      font-size: 48px;
+      font-weight: 800;
+      display: block;
+      margin: 15px 0;
+      background: linear-gradient(to bottom, white, #e0f2fe);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    @keyframes fillBar {
+      from { width: 0; }
+      to { width: 95%; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive */
+    @media screen and (max-width: 900px) {
+      .navbar {
+        padding: 15px 20px;
+        flex-wrap: wrap;
+      }
+      
+      .nav-links {
+        order: 3;
+        margin-top: 15px;
+        width: 100%;
+        justify-content: center;
+        gap: 8px;
+      }
+      
+      .hero-left h1 {
+        font-size: 38px;
+      }
+      
+      .hero-stats {
+        justify-content: center;
+      }
+    }
+
+    @media screen and (max-width: 600px) {
+      .hero-buttons {
+        flex-direction: column;
+      }
+      
+      .hero-left h1 {
+        font-size: 32px;
+      }
+      
+      .nav-links a span {
+        display: none;
+      }
+      
+      .nav-links a i {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="logo">
+      <div class="logo-icon">
+         <i class="fas fa-briefcase"></i>
+      </div>
+      <div class="logo-text">CareerMate</div>
+    </div>
+    <div class="nav-links">
+      <a href="{% url 'login' %}" class="active"><i class="fas fa-sign-in"></i> <span>Login</span></a>
+    </div> 
+    
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-container">
+      <div class="hero-left">
+        <div class="tag">
+          <i class="fas fa-star"></i> AI-Powered Career Platform
+        </div>
+        <h1>Supercharge Your Career with AI</h1>
+        <p>Get ATS-optimized resumes, AI interview prep, GitHub skill analysis, and personalized job recommendations — all in one powerful platform designed to accelerate your career growth.</p>
+        <div class="hero-buttons">
+          {% comment %} <button class="btn btn-primary"><i class="fas fa-rocket"></i> Get Started Free</button> {% endcomment %}
+          <a href="{% url 'signup' %}" class="btn btn-primary"><i class="fas fa-rocket"></i> <span>Get Started Free</span></a>
+          <a href="{% url 'login' %}" class="btn btn-primary"><i class="fas fa-sign-in"></i> <span>Login</span></a>
+        </div>
+       
+      </div>
+
+      
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Simple animation for buttons on hover
+    document.querySelectorAll('.btn').forEach(button => {
+      button.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-3px)';
+      });
+      
+      button.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+      });
+    });
+  </script>
+</body>
+</html>
