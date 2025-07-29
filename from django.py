@@ -36,7 +36,6 @@ def signup_view(request):
             # This logs the new user in automatically
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             messages.success(request, f'Welcome, {user.first_name}! Your account has been created successfully.')
-            
             # This redirects the now-logged-in user to the dashboard
             return redirect('dashboard')
     else:
@@ -52,7 +51,7 @@ def signup_view(request):
             # This logs the new user in automatically
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             messages.success(request, f'Welcome, {user.first_name}! Your account has been created successfully.')
-            
+            console.log(user)
             # This redirects the now-logged-in user to the dashboard
             return redirect('dashboard')
     else:

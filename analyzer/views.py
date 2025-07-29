@@ -33,6 +33,7 @@ def login_view(request):
         user = authenticate(request, username=email, password=password)
         if user is not None:
             login(request, user)
+            print(user.__dict__)
             return redirect('dashboard')
         else:
             messages.error(request, "Invalid email or password. Please try again.")
