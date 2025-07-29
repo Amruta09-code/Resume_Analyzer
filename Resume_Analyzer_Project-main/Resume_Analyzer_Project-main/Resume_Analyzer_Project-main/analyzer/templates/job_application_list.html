@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Job Applications</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            color: #1a202c;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            margin-top: 30px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a202c;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .header h2 i {
+            color: #4361ee;
+        }
+        .add-btn {
+            background: linear-gradient(90deg, #4361ee 0%, #3a0ca3 100%);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+        }
+        .table-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+        th {
+            font-weight: 600;
+            color: #4a5568;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tr:hover {
+            background-color: #f8fafc;
+        }
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        .status-Applied { background-color: #e0e7ff; color: #4361ee; }
+        .status-Interviewing { background-color: #fff4e0; color: #f97316; }
+        .status-Offer { background-color: #dcfce7; color: #22c55e; }
+        .status-Rejected { background-color: #fee2e2; color: #ef4444; }
+        .actions a {
+            text-decoration: none;
+            margin-right: 15px;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .actions .edit { color: #4361ee; }
+        .actions .delete { color: #ef4444; }
+        .no-apps {
+            text-align: center;
+            padding: 50px;
+            color: #718096;
+        }
+        .filter-section {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        .form-group {
+            flex-grow: 1;
+            position: relative;
+        }
+        .search-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            font-size: 14px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .search-group .form-control {
+            padding-left: 40px;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #4361ee;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+        .filter-btn {
+            background: #4361ee;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .filter-btn:hover {
+            background: #3a0ca3;
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="container">
+        <div class="header">
+            <h2><i class="fas fa-clipboard-list"></i> My Job Applications</h2>
+            <a href="{% url 'add_job_application' %}" class="add-btn"><i class="fas fa-plus"></i> Add Application</a>
+        </div>
+
+        <div class="filter-section">
+            <form method="get" action="{% url 'job_application_list' %}">
+                <div class="form-row">
+                    <div class="form-group search-group">
+                        <i class="fas fa-search"></i>
+                        <input type="text" name="q" class="form-control" placeholder="Search by company or title..." value="{{ current_query }}">
+                    </div>
+                    <div class="form-group" style="flex-grow: 0; min-width: 200px;">
+                        <select name="status" class="form-control">
+                            <option value="">All Statuses</option>
+                            {% for value, display in status_choices %}
+                                <option value="{{ value }}" {% if current_status == value %}selected{% endif %}>{{ display }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="filter-btn">Filter</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Company</th>
+                        <th>Job Title</th>
+                        <th>Status</th>
+                        <th>Date Applied</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in applications %}
+                    <tr>
+                        <td><strong>{{ app.company_name }}</strong></td>
+                        <td>{{ app.job_title }}</td>
+                        <td><span class="status-badge status-{{ app.status }}">{{ app.get_status_display }}</span></td>
+                        <td>{{ app.application_date|date:"M d, Y" }}</td>
+                        <td class="actions">
+                            <a href="{% url 'edit_job_application' app.id %}" class="edit">Edit</a>
+                            <a href="{% url 'delete_job_application' app.id %}" class="delete" onclick="return confirm('Are you sure you want to delete this application?');">Delete</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="no-apps">You haven't tracked any job applications yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

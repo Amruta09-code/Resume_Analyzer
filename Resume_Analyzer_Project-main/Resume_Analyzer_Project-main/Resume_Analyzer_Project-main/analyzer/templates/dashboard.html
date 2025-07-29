@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerMet Compact Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f9ff 0%, #e8f0ff 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.5;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 70px;
+            background: white;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding: 25px 0;
+            box-shadow: 5px 0 20px rgba(0, 0, 0, 0.05);
+            z-index: 90;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-logo {
+            padding: 0 5px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            border-bottom: 1px solid #eef2f7;
+        }
+
+        .sidebar-logo-icon {
+            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-logo-text {
+            font-size: 10px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            white-space: nowrap;
+            display: block;
+        }
+
+        .sidebar-menu {
+            padding: 25px 0;
+            flex: 1;
+        }
+
+        .menu-item {
+            padding: 10px 5px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+            color: #5f6368;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .menu-item i {
+            width: 22px;
+            text-align: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .menu-item span {
+            font-size: 9px;
+            display: block;
+        }
+
+        .menu-item:hover {
+            background: #f5f9ff;
+            color:  #4361ee;
+        }
+
+        .menu-item:hover i {
+            transform: scale(1.1);
+            color:  #4361ee;
+        }
+
+        .menu-item.active {
+            background: linear-gradient(90deg, rgba(26, 115, 232, 0.1) 0%, rgba(26, 115, 232, 0.05) 100%);
+            color:  #4361ee;
+        }
+
+        .menu-item.active i {
+            color:  #4361ee;
+        }
+
+        .create-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #4361ee, #153df3);
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.25);
+            margin: 0 auto 15px;
+            flex-shrink: 0;
+        }
+
+        .create-item:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(26, 115, 232, 0.35);
+        }
+
+        .sidebar-bottom {
+            padding: 25px 5px;
+            border-top: 1px solid #eef2f7;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .sidebar-action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 0;
+            color: #5f6368;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .sidebar-action i {
+            width: 22px;
+            text-align: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-action span {
+            font-size: 9px;
+            display: block;
+        }
+
+        .sidebar-action:hover {
+            color: #1a73e8;
+        }
+
+        .sidebar-action:hover i {
+            transform: scale(1.1);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 70px;
+        }
+
+        /* Navigation Bar */
+        /* Navigation Bar Styles */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            padding: 0 25px;
+            height: 70px;
+            box-shadow: 0 4px 15px rgba(26, 115, 232, 0.12);
+            position: sticky;
+            top: 15px;
+            z-index: 100;
+            border-bottom: 2px solid #e0e8ff;
+            border-radius: 15px;
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: #f5f9ff;
+            padding: 7px 12px;
+            border-radius: 50px;
+            width: 220px;
+        }
+        .search-bar input {
+            border: none;
+            background: transparent;
+            padding: 0 8px;
+            font-size: 14px;
+            width: 100%;
+            outline: none;
+        }
+        .search-bar i {
+            color: #5f6368;
+            font-size: 14px;
+        }
+        .top-nav-links {
+            display: flex;
+            gap: 8px;
+            background: #fff;
+            padding: 3px 8px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            align-items: center;
+        }
+        .top-nav-links a {
+            text-decoration: none;
+            color: #5f6368;
+            font-weight: 600;
+            padding: 8px 18px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+        }
+        .top-nav-links a i {
+            font-size: 16px;
+            transition: color 0.2s;
+        }
+        .top-nav-links a:hover {
+            background: #f0f5ff;
+            color: #4361ee;
+            transform: translateY(-2px);
+        }
+        .top-nav-links a:hover i {
+            color: #4361ee;
+        }
+        .top-nav-links a.active {
+            background: linear-gradient(135deg, #4361ee, #153df3);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.25);
+        }
+        .top-nav-links a.active i {
+            color: #fff;
+        }
+        @media (max-width: 1024px) {
+            .navbar {
+                padding: 0 12px;
+            }
+            .top-nav-links a {
+                padding: 7px 10px;
+                font-size: 12px;
+            }
+            .search-bar {
+                width: 160px;
+            }
+        }
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                height: auto;
+                padding: 10px;
+                gap: 10px;
+            }
+            .search-bar {
+                width: 100%;
+                max-width: 350px;
+            }
+            .top-nav-links {
+                width: 100%;
+                overflow-x: auto;
+                padding: 8px 2px;
+                justify-content: flex-start;
+            }
+        }
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 0 2px;
+            }
+            .top-nav-links a {
+                padding: 6px 6px;
+                font-size: 11px;
+            }
+            .search-bar {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1300px;
+            margin: 30px auto;
+            padding: 0 30px;
+        }
+
+        header {
+            margin-bottom: 25px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        header h1 {
+            font-size: 28px;
+            color: #1a2b4d;
+            margin-bottom: 8px;
+            font-weight: 800;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #5f6368;
+            max-width: 550px;
+            line-height: 1.6;
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 10px;
+            padding: 18px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.04);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #eef2f7;
+            cursor: pointer;
+            height: 130px;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(26, 115, 232, 0.12);
+            border-color: #a8c6ff;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #4361ee, #7209b7);
+            border-radius: 10px 10px 0 0;
+        }
+
+        .metric-title {
+            font-size: 14px;
+            color: #5f6368;
+            margin-bottom: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .metric-title i {
+            font-size: 16px;
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: #1a2b4d;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+        }
+
+        .metric-change {
+            font-size: 12px;
+            color: #34a853;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 600;
+        }
+
+        .metric-change::before {
+            content: "▲";
+            font-size: 10px;
+        }
+
+        /* COMPACT CONTENT SECTION */
+        .content-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .compact-card {
+            background: white;
+            border-radius: 10px;
+            padding: 12px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.03);
+            border: 1px solid #eef2f7;
+            min-height: 140px; /* Fixed height for all cards */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .compact-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(26, 115, 232, 0.12);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f0f5ff;
+        }
+
+        .card-header i {
+            width: 32px;
+            height: 32px;
+            background: #f0f5ff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4361ee;
+            font-size: 14px;
+            margin-right: 12px;
+        }
+
+        .card-header h2 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a2b4d;
+        }
+
+        /* Job Application Tracker */
+        .tracker-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .tracker-item {
+            background: #f8fbff;
+            border-radius: 8px;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border: 1px solid #e0e8ff;
+        }
+
+        .tracker-value {
+            font-size: 16px;
+            font-weight: 800;
+            color: #1a2b4d;
+            margin-bottom: 2px;
+        }
+
+        .tracker-label {
+            font-size: 10px;
+            color: #5f6368;
+        }
+
+        .tracker-icon {
+            width: 22px;
+            height: 22px;
+            background: #f0f5ff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 4px;
+            color: #4361ee;
+            font-size: 12px;
+        }
+
+        /* Activity List */
+        .activity-list {
+            list-style: none;
+            flex: 1;
+            overflow-y: auto;
+            max-height: 150px;
+            padding-right: 5px;
+        }
+
+        .activity-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .activity-list::-webkit-scrollbar-thumb {
+            background: #d0d8e8;
+            border-radius: 2px;
+        }
+
+        .activity-list::-webkit-scrollbar-track {
+            background: #f5f9ff;
+            border-radius: 2px;
+        }
+
+        .activity-item {
+            display: flex;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f5ff;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 22px;
+            height: 22px;
+            background: #f0f5ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+            color: #4361ee;
+            font-size: 11px;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            color: #1a2b4d;
+            margin-bottom: 2px;
+            font-size: 13px;
+        }
+
+        .activity-date {
+            font-size: 11px;
+            color: #8a8d93;
+        }
+        .right-column .compact-card:first-child {
+    padding: 10px;
+    min-height: 120px;
+}
+
+        /* Learning Card */
+        .learning-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .learning-item {
+            background: #f8fbff;
+            border-radius: 8px;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #e0e8ff;
+        }
+
+        .learning-icon {
+            width: 22px;
+            height: 22px;
+            background: #f0f5ff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 4px auto 8px;
+            color: #4361ee;
+            font-size: 11px;
+        }
+
+        .learning-label {
+            font-size: 10px;
+            color: #5f6368;
+            text-align: center;
+            margin-bottom: 1px;
+        }
+
+        .learning-text {
+            font-weight: 700;
+            color: #1a2b4d;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .navbar {
+                padding: 0 20px;
+            }
+            
+            .top-nav-links a {
+                padding: 7px 12px;
+                font-size: 12px;
+            }
+            
+            .metrics-grid {
+                gap: 12px;
+            }
+            
+            .search-bar {
+                width: 200px;
+            }
+            
+            .container {
+                padding: 0 25px;
+            }
+            
+            .content-columns {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .compact-card {
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                height: auto;
+                padding: 12px;
+                gap: 12px;
+            }
+            
+            .search-bar {
+                width: 100%;
+                max-width: 450px;
+            }
+            
+            .top-nav-links {
+                width: 100%;
+                overflow-x: auto;
+                padding: 8px;
+                justify-content: flex-start;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+            
+            header h1 {
+                font-size: 24px;
+            }
+            
+            .sidebar {
+                width: 60px;
+            }
+            
+            .main-content {
+                margin-left: 60px;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            }
+            
+            .compact-card {
+                height: 190px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .metric-card {
+                padding: 15px;
+                height: 120px;
+            }
+            
+            .metric-value {
+                font-size: 24px;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .compact-card {
+                padding: 18px;
+                height: 180px;
+            }
+            
+            .tracker-grid,
+            .learning-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Progress Bar Section */
+        .progress-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.04);
+            border: 1px solid #eef2f7;
+            margin-top: 25px;
+        }
+
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .progress-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 5px 0;
+        }
+
+        .progress-label {
+            flex-basis: 160px; /* Increased width for longer names */
+            flex-shrink: 0;
+            font-weight: 600;
+            color: #3c4043;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+        }
+
+        .progress-label i {
+            color: #4361ee;
+            width: 18px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .progress-bar-container {
+            flex-grow: 1;
+            height: 10px;
+            background-color: #eef2f7;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4361ee, #7209b7);
+            border-radius: 5px;
+            transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .progress-percentage {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1a2b4d;
+            flex-basis: 40px;
+            text-align: right;
+        }
+
+        @media (max-width: 768px) {
+            .progress-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Decorations */
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(26, 115, 232, 0.1) 0%, rgba(110, 203, 245, 0.1) 100%);
+            z-index: -1;
+        }
+
+        .circle-1 {
+            width: 250px;
+            height: 250px;
+            top: -125px;
+            right: -125px;
+        }
+
+        .circle-2 {
+            width: 180px;
+            height: 180px;
+            bottom: -90px;
+            left: -90px;
+        }
+        .right-column .compact-card {
+    margin-bottom: 15px;
+    height: auto; /* Let it grow with content */
+    min-height: 250px;
+}
+.left-column .compact-card {
+    min-height: 120px;  /* Reduce height */
+    padding: 10px;       /* Reduce padding */
+}
+/* Reduce height of only Learning Recommendations */
+.right-column .compact-card:last-child {
+    min-height: 120px;
+    padding: 10px;
+}
+
+    </style>
+</head>
+<body>
+    <!-- Decorative Circles -->
+    <div class="circle circle-1"></div>
+    <div class="circle circle-2"></div>
+    
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-icon">
+                <i class="fas fa-briefcase"></i>
+            </div>
+            <div class="sidebar-logo-text">CareerMate</div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <!-- Circular Create Button -->
+            <div class="create-item">
+                <i class="fas fa-plus"></i>
+            </div>
+            
+            <div class="menu-item active">
+                <i class="fas fa-chart-simple"></i>
+                <span>Dashboard</span>
+            </div>
+            <a href="{% url 'upload_resume' %}" class="menu-item">
+                <i class="fas fa-file-alt"></i>
+                <span>Upload Resume</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-layer-group"></i>
+                <span>Templates</span>
+            </div>
+        </div>
+        
+        <div class="sidebar-bottom">
+            {% comment %} <div class="sidebar-action">
+                <i class="fas fa-bell"></i>
+                <span>Notifications</span>
+            </div> {% endcomment %}
+            <a href="{% url 'profile' %}" class="sidebar-action">
+                <i class="fas fa-user-circle"></i>
+                <span>Profile</span>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        {% include 'navbar.html' with active_page='dashboard' %}
+        
+        <div class="container">
+            <header>
+                <h1>Welcome back, {{ user.first_name }}!</h1>
+                <p class="subtitle">Here's what's happening with your career development. Track your progress, analyze your job search, and optimize your career strategy.</p>
+            </header>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-title"><i class="fas fa-chart-line"></i> ATS Score</div>
+                    <div class="metric-value">{% if latest_resume and latest_resume.ats_score is not None %}{{ latest_resume.ats_score }}%{% else %}N/A{% endif %}</div>
+                    <div class="metric-change" style="color: #5f6368; visibility: {% if latest_resume %}visible{% else %}hidden{% endif %};">Latest Resume</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-title"><i class="fas fa-file"></i> Resumes</div>
+                    <div class="metric-value">{{ resume_count }}</div>
+                    <div class="metric-change" style="color: #5f6368;">Total Uploaded</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-title"><i class="fas fa-comments"></i> Interview Questions</div>
+                    <div class="metric-value">TBD</div>
+                    <div class="metric-change" style="color: #5f6368;">Feature Coming Soon</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-title"><i class="fas fa-star"></i> Skill Score</div>
+                     <div class="metric-value">{% if skill_score is not None %}{{ skill_score }}{% else %}N/A{% endif %}</div>
+                    <div class="metric-change" style="color: #5f6368;">Based on ATS Score</div>
+                </div>
+            </div>  
+            
+            <!-- Domain Progress Section -->
+            <div class="progress-section">
+                <div class="card-header" style="margin-bottom: 15px; padding-bottom: 12px;">
+                    <i class="fas fa-tasks"></i>
+                    <h2>Domain Progress</h2>
+                </div>
+                {% if not latest_resume or latest_resume.domain == "General" %}
+                <div style="text-align: center; padding: 10px; background: #f8fafc; border-radius: 12px; margin-bottom: 15px;">
+                    <i class="fas fa-info-circle" style="font-size: 18px; color: #4361ee; margin-bottom: 8px;"></i>
+                    <p style="color: #718096; font-size: 13px;">Upload a resume with specific keywords (e.g., "Python", "React", "Figma") to see your progress in a specific domain.</p>
+                </div>
+                {% endif %}
+                <div class="progress-grid">
+                    {% for domain in skill_domains %}
+                    <div class="progress-item">
+                        <div class="progress-label">
+                            <i class="{{ domain.icon }}"></i>
+                            <span>{{ domain.name }}</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: {{ domain.progress }}%;"></div>
+                        </div>
+                        <div class="progress-percentage">{{ domain.progress|floatformat:0 }}%</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- COMPACT CONTENT SECTION -->
+            <div class="content-columns">
+                <!-- Left Column: Job Application Tracker -->
+                <div class="left-column">
+                    <div class="compact-card">
+                        <div class="card-header">
+                            <i class="fas fa-clipboard-list"></i>
+                            <h2>Job Application Tracker</h2>
+                        </div>
+                        <div class="tracker-grid">
+                            <div class="tracker-item">
+                                <div class="tracker-icon">
+                                    <i class="fas fa-paper-plane"></i>
+                                </div>
+                                <div class="tracker-value">{{ applied_count }}</div>
+                                <div class="tracker-label">Jobs Applied</div>
+                            </div>
+                            <div class="tracker-item">
+                                <div class="tracker-icon">
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                                <div class="tracker-value">{{ interviews_count }}</div>
+                                <div class="tracker-label">Interviews</div>
+                            </div>
+                            <div class="tracker-item">
+                                <div class="tracker-icon">
+                                    <i class="fas fa-trophy"></i>
+                                </div>
+                                <div class="tracker-value">{{ offers_count }}</div>
+                                <div class="tracker-label">Offers</div>
+                            </div>
+                            <div class="tracker-item">
+                                <div class="tracker-icon">
+                                    <i class="fas fa-hourglass-half"></i>
+                                </div>
+                                <div class="tracker-value">{{ pending_count }}</div>
+                                <div class="tracker-label">Pending</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Column -->
+                <div class="right-column">
+                    <!-- Recent Activity -->
+                    <div class="compact-card">
+                        <div class="card-header">
+                            <i class="fas fa-history"></i>
+                            <h2>Recent Activity</h2>
+                        </div>
+                        {% if activities %}
+                            <ul class="activity-list">
+                                {% for activity in activities %}
+                                <li class="activity-item">
+                                    <div class="activity-icon">
+                                        <i class="{{ activity.icon_class }}"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">{{ activity.activity_type }}</div>
+                                        <div class="activity-date">{{ activity.timestamp|date:"F j" }}</div>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p style="text-align: center; color: #5f6368; padding: 20px 0;">No recent activity.</p>
+                        {% endif %}
+                         <div style="text-align: center; margin-top: 20px;">
+                            <a href="{% url 'profile' %}" style="text-decoration: none; color: #4361ee; font-weight: 600;">
+                            View Your Profile
+                            </a>
+                         </div>
+                    </div>
+                    
+                    <!-- Learning Recommendations -->
+                    <div class="compact-card">
+                        <div class="card-header">
+                            <i class="fas fa-graduation-cap"></i>
+                            <h2>Learning Recommendations</h2>
+                        </div>
+                        {% if learning_recommendations %}
+                            <div class="learning-content">
+                                {% for item in learning_recommendations %}
+                                <div class="learning-item">
+                                    <div class="learning-icon">
+                                        <i class="{{ item.icon }}"></i>
+                                    </div>
+                                    <div class="learning-label">{{ item.label }}</div>
+                                    <div class="learning-text">{{ item.text }}</div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p style="text-align: center; color: #5f6368; padding: 20px 0;">Upload a resume to get recommendations.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Add active class to menu items on click
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.menu-item').forEach(i => {
+                    i.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+        
+        // Create button animation
+        const createBtn = document.querySelector('.create-item');
+        createBtn.addEventListener('click', function() {
+            this.classList.add('pulse');
+            setTimeout(() => {
+                this.classList.remove('pulse');
+                alert('Create new content!');
+            }, 300);
+        });
+        
+        // Add hover effect to metric cards
+        document.querySelectorAll('.metric-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.zIndex = '10';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.zIndex = '1';
+            });
+        });
+        
+        // Add click effect to sidebar actions except Profile
+        document.querySelectorAll('.sidebar-action').forEach(action => {
+            if (action.querySelector('span') && action.querySelector('span').textContent !== 'Profile') {
+                action.addEventListener('click', function() {
+                    const actionName = this.querySelector('span').textContent;
+                    alert(actionName + " clicked!");
+                });
+            }
+        });
+        
+        // Add hover effect to compact cards
+        document.querySelectorAll('.compact-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.zIndex = '5';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.zIndex = '1';
+            });
+        });
+    </script>
+</body>
+</html>

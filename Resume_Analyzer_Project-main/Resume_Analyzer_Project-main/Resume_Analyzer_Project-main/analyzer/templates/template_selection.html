@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose a Resume Template - CareerMet</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* NOTE: It's recommended to move this CSS to a static file */
+        /* Basic styles copied from dashboard.html for consistency */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: all 0.3s ease; }
+        body { background: linear-gradient(135deg, #f5f9ff 0%, #e8f0ff 100%); min-height: 100vh; color: #333; line-height: 1.5; display: flex; overflow-x: hidden; }
+        .sidebar { width: 70px; background: white; height: 100vh; position: fixed; left: 0; top: 0; padding: 25px 0; box-shadow: 5px 0 20px rgba(0, 0, 0, 0.05); z-index: 90; display: flex; flex-direction: column; overflow: hidden; }
+        .sidebar-logo { padding: 0 5px 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; border-bottom: 1px solid #eef2f7; }
+        .sidebar-logo-icon { background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%); color: white; width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+        .sidebar-logo-text { font-size: 10px; font-weight: 700; background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; white-space: nowrap; display: block; }
+        .sidebar-menu { padding: 25px 0; flex: 1; }
+        .menu-item { padding: 10px 5px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; font-weight: 500; color: #5f6368; font-size: 12px; white-space: nowrap; text-decoration: none; }
+        .menu-item i { width: 22px; text-align: center; font-size: 18px; flex-shrink: 0; }
+        .menu-item span { font-size: 9px; display: block; }
+        .menu-item:hover { background: #f5f9ff; color: #4361ee; }
+        .menu-item:hover i { transform: scale(1.1); color: #4361ee; }
+        .menu-item.active { background: linear-gradient(90deg, rgba(26, 115, 232, 0.1) 0%, rgba(26, 115, 232, 0.05) 100%); color: #4361ee; }
+        .menu-item.active i { color: #4361ee; }
+        .create-item { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; background: linear# Add this to analyzer/views.py
+        from django.shortcuts import render
+        from django.contrib.auth.decorators import login_required
+        
+        @login_required
+        def template_selection_view(request):
+            """
+            Renders the page for selecting a resume template.
+            """
+            # For demonstration, we'll use a static list of templates.
+            # In a real application, you might fetch these from a database.
+            templates = [
+                {
+                    'id': 1, 
+                    'name': 'Classic Professional', 
+                    'image_url': 'https://cdn-images.resumelab.com/pages/cv_templates_valera.png'
+                },
+                {
+                    'id': 2, 
+                    'name': 'Modern Minimalist', 
+                    'image_url': 'https://cdn-images.resumelab.com/pages/cv_templates_crisp.png'
+                },
+                {
+                    'id': 3, 
+                    'name': 'Creative Columnist', 
+                    'image_url': 'https://cdn-images.resumelab.com/pages/cv_templates_cubic.png'
+                },
+                {
+                    'id': 4, 
+                    'name': 'Technical Specialist', 
+                    'image_url': 'https://cdn-images.resumelab.com/pages/cv_templates_concept.png'
+                },
+            ]
+            
+            context = {
+                'username': request.user.username,
+                'templates': templates,
+                'active_page': 'templates' # For highlighting the active link
+            }
+            return render(request, 'template_selection.html', context)
+        -gradient(135deg, #4361ee, #153df3); border-radius: 50%; color: white; font-size: 20px; box-shadow: 0 4px 12px rgba(26, 115, 232, 0.25); margin: 0 auto 15px; flex-shrink: 0; }
+        .create-item:hover { transform: scale(1.1); box-shadow: 0 6px 16px rgba(26, 115, 232, 0.35); }
+        .sidebar-bottom { padding: 25px 5px; border-top: 1px solid #eef2f7; display: flex; flex-direction: column; gap: 15px; }
+        .sidebar-action { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px 0; color: #5f6368; font-size: 12px; cursor: pointer; white-space: nowrap; text-decoration: none; }
+        .sidebar-action i { width: 22px; text-align: center; font-size: 18px; flex-shrink: 0; }
+        .sidebar-action span { font-size: 9px; display: block; }
+        .sidebar-action:hover { color: #1a73e8; }
+        .main-content { flex: 1; margin-left: 70px; }
+        .container { max-width: 1300px; margin: 30px auto; padding: 0 30px; }
+        header { margin-bottom: 25px; }
+        header h1 { font-size: 28px; color: #1a2b4d; margin-bottom: 8px; font-weight: 800; }
+        .subtitle { font-size: 14px; color: #5f6368; max-width: 550px; line-height: 1.6; }
+
+        /* New Styles for Template Selection Page */
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .template-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.04);
+            border: 1px solid #eef2f7;
+            overflow: hidden;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+        }
+        .template-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(26, 115, 232, 0.12);
+            border-color: #a8c6ff;
+        }
+        .template-image-wrapper {
+            background-color: #f8fbff;
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .template-card img {
+            max-width: 100%;
+            max-height: 320px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .template-card-content {
+            padding: 20px;
+            border-top: 1px solid #eef2f7;
+        }
+        .template-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a2b4d;
+            margin-bottom: 15px;
+        }
+        .template-card .btn-use {
+            text-decoration: none;
+            background: linear-gradient(135deg, #4361ee, #153df3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            display: inline-block;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.25);
+        }
+        .template-card .btn-use:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(26, 115, 232, 0.35);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-icon"><i class="fas fa-briefcase"></i></div>
+            <div class="sidebar-logo-text">CareerMet</div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <a href="{% url 'add_job_application' %}" class="create-item" title="Add Job Application">
+                <i class="fas fa-plus"></i>
+            </a>
+            
+            <a href="{% url 'dashboard' %}" class="menu-item {% if active_page == 'dashboard' %}active{% endif
